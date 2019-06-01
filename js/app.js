@@ -228,3 +228,7 @@ function getToDoItems() {
         // toDoContents.appendChild(toDoDiv);        
     });
 }
+
+// Set the CopyRight dynamically...
+let year = document.getElementById('year');
+year.innerHTML = new Date().getFullYear();
