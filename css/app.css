@@ -1,0 +1,9 @@
+/* ToDo Completed Class */
+.completed {
+    text-decoration: line-through;
+}
+
+/* ToDo Not Completed Class */
+.notCompleted {
+    text-decoration: none;
+}

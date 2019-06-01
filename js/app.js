@@ -30,15 +30,23 @@ function saveToDoItem(event) {
     let toDoItem = document.getElementById("toDoItem").value;
     let isCompleted = false;
 
-    let toDo = {
-        item: toDoItem,
-        isCompleted: isCompleted
+    // ToDo Object
+    function ToDo(id,item,isCompleted) {
+        this.id = id;
+        this.item = item;
+        this.isCompleted = isCompleted;
     }
+
 
     // Checks if localStorage is empty and also adds to it
     if (localStorage.getItem('toDos') === null) {
         // Create an array of ToDo items and add each toDo to it and then also save it to localStorage
         let toDos = [];
+
+        // Create the toDo Object from ToDo
+        let id = toDos.length + 1;
+        let toDo = new ToDo(id,toDoItem,isCompleted);
+
         // Append each toDo item to it
         toDos.push(toDo);
         // Save to localStorage by converrting the array to a JSON
@@ -46,6 +54,11 @@ function saveToDoItem(event) {
     } else {
         // Fetch data from LocalStorage, convert it to an array
         let toDos = JSON.parse(localStorage.getItem('toDos'));
+
+        // Create the toDo Object from ToDo
+        let id = toDos.length + 1;
+        let toDo = new ToDo(id,toDoItem,isCompleted);
+
         // Append toDo to the array of toDos
         toDos.push(toDo);
         // Convert back to JSON and Save to localStorage
@@ -86,9 +99,9 @@ function deleteToDoItem(toDoText) {
 
 
 // Function to mark each toDo Item completed
-function checkCompleted(toDoText) {
+function checkCompleted(toDoId,toDoText) {
 
-    // console.log(toDoText);
+    let toDoToMark = document.getElementById(toDoId);
 
     // completed = false;
     // notCompleted = false;
@@ -97,6 +110,7 @@ function checkCompleted(toDoText) {
     let toDos = JSON.parse(localStorage.getItem('toDos'));
 
     toDos.forEach((toDo) => {
+        let id = toDo.id;
         let item = toDo.item;
         let isCompleted = toDo.isCompleted;
 
@@ -106,12 +120,18 @@ function checkCompleted(toDoText) {
                 toDo.isCompleted = true;
             //    console.log(item)
 
+                // Change the CSS class for the toDo Text
+                toDoToMark.className = "completed";
+                
                 // Append the new Arrays of toDo Items to LocalStorage
                 localStorage.setItem('toDos', JSON.stringify(toDos));
 
             }
             if (isCompleted === true) {
                 toDo.isCompleted = false;
+
+                // Change the CSS class for the toDo Text
+                toDoToMark.className = "notCompleted";
 
                 // Append the new Arrays of toDo Items to LocalStorage
                 localStorage.setItem('toDos', JSON.stringify(toDos));
@@ -126,36 +146,29 @@ function checkCompleted(toDoText) {
         //     done.textDecoration = 'none';
         // }
     });
-
-    // console.log(newToDos);
-    // localStorage.setItem()
-
-    // Re-fetch ToDo Items
-    // getToDoItems();
 }
 
 
-// // Function to Mark Completed toDoItems
-// function markCompleted() {
-//     // Fetch data from LocalStorage, convert it to an array
-//     let toDos = JSON.parse(localStorage.getItem('toDos'));
+// Function to Mark Completed toDoItems
+function markCompleted() {
 
-//     // Adds CSS textDecoration to the completed tODoItem
-//     toDos.forEach(toDo => {
-//         isCompleted = toDo.isCompleted;
+    // Fetch data from LocalStorage, convert it to an array
+    let toDos = JSON.parse(localStorage.getItem('toDos'));
 
-//         if (isCompleted === true) {
-//             toDoItemStyle = 'line-through';
-//             return toDoItemStyle;
-//         } else {
-//             toDoItemStyle = 'none';
-//             return toDoItemStyle;
-//         }
-//     });
+    // Adds CSS textDecoration to the completed tODoItem
+    toDos.forEach(toDo => {
+        toDoId = toDo.id;
+        isCompleted = toDo.isCompleted;
 
-//     // Re-fetch ToDo Items
-//     // getToDoItems();
-// }
+        let toDoToMark = document.getElementById(toDoId)
+
+        if (isCompleted === true) {
+            toDoToMark.className = "completed";
+        } else {
+            toDoToMark.className = "notCompleted";
+        }
+    });
+}
 
 
 // Displaying the saved toDo Items to the page
@@ -190,6 +203,7 @@ function getToDoItems() {
     toDos.reverse();
 
     toDos.forEach(toDo => {
+        let id = toDo.id;
         let item = toDo.item;
         let isCompleted = toDo.isCompleted;
 
@@ -207,15 +221,12 @@ function getToDoItems() {
             markMe = "unchecked";
         }
 
-        // // Calling function to mark the completed toDoItems
-        // markCompleted();
-
         // Output the HTML structure to the page, still planning on upgrading this very soon...
         toDoContents.innerHTML += `<div class="well">
-                                    <span id="todoItemText" class="">${item}</span>
+                                    <span id="${id}">${item}</span>
                                     <div class="pull-right">
-                                    <input onchange="checkCompleted(\'${item}\')" type="checkbox" ${markMe}>
-                                    <button onclick="deleteToDoItem(\'${item}\')" class="btn btn-danger">Delete</button>
+                                    <input onchange="checkCompleted('${id}','${item}')" type="checkbox" ${markMe}>
+                                    <button onclick="deleteToDoItem('${item}')" class="btn btn-danger">Delete</button>
                                     </div>
                                  </div>`
 
@@ -227,6 +238,9 @@ function getToDoItems() {
 
         // toDoContents.appendChild(toDoDiv);        
     });
+
+    // Calling function to mark the completed toDoItems
+    markCompleted();
 }
 
 // Set the CopyRight dynamically...
