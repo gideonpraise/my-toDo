@@ -4,7 +4,7 @@ if (JSON.parse(localStorage.getItem('toDos')) !== null) {
 }
 
 // CSS CLass for completed toDoItems
-// let completedClass = document.getElementsByClassName('completedCSS');
+let completedClass = document.getElementsByClassName('completedCSS');
 // console.log(completedClass);
 
 // // Add EventListener to the checkBox
@@ -88,23 +88,13 @@ function deleteToDoItem(toDoText) {
 // Function to mark each toDo Item completed
 function checkCompleted(toDoText) {
 
-    console.log(toDoText);
+    // console.log(toDoText);
 
-    completed = false;
+    // completed = false;
     // notCompleted = false;
 
     // Fetch data from LocalStorage, check for it's truthy value and assign a new truthy value to it onClick
     let toDos = JSON.parse(localStorage.getItem('toDos'));
-
-    // console.log(toDos)
-
-    // if (toDos[1].item == toDoText) {
-    //     console.log(`This is db ${toDos[1].item} and the parsed data ${toDoText}`);
-    // }
-
-    // for(let i = 0; i < toDos.length; i++) {
-    //     // console.log(toDos)
-    // }
 
     toDos.forEach((toDo) => {
         let item = toDo.item;
@@ -114,6 +104,7 @@ function checkCompleted(toDoText) {
             // console.log(toDo);
             if (isCompleted === false) {
                 toDo.isCompleted = true;
+            //    console.log(item)
 
                 // Append the new Arrays of toDo Items to LocalStorage
                 localStorage.setItem('toDos', JSON.stringify(toDos));
@@ -196,18 +187,18 @@ function getToDoItems() {
     toDoContents.innerHTML = '';
 
     // Reverse the toDo Array
-    // toDos.reverse();
+    toDos.reverse();
 
     toDos.forEach(toDo => {
         let item = toDo.item;
         let isCompleted = toDo.isCompleted;
 
-        //  // Adds CSS Style textDecoration to each toDoItem if isCompleted or not
-        //  if (isCompleted === true) {
-        //     toDoItemStyle = 'line-through';
-        // } else {
-        //     toDoItemStyle = 'none';
-        // }
+         // Adds CSS Style textDecoration to each toDoItem if isCompleted or not
+         if (isCompleted === true) {
+            toDoItemStyle = 'line-through';
+        } else {
+            toDoItemStyle = 'none';
+        }
 
         // Checks and Unchecks the input element if isCompleted or not
         if (isCompleted === true) {
@@ -221,9 +212,9 @@ function getToDoItems() {
 
         // Output the HTML structure to the page, still planning on upgrading this very soon...
         toDoContents.innerHTML += `<div class="well">
-                                    <span class="...completedCSS">${item}</span>
+                                    <span id="todoItemText" class="">${item}</span>
                                     <div class="pull-right">
-                                    <input id="now" onchange="checkCompleted(\'${item}\')" type="checkbox" ${markMe}>
+                                    <input onchange="checkCompleted(\'${item}\')" type="checkbox" ${markMe}>
                                     <button onclick="deleteToDoItem(\'${item}\')" class="btn btn-danger">Delete</button>
                                     </div>
                                  </div>`
@@ -236,20 +227,4 @@ function getToDoItems() {
 
         // toDoContents.appendChild(toDoDiv);        
     });
-
-    // I had to test for somethings here....
-
-    // for (var i = 0; i < toDos.length; i++) {
-
-    //     var item = toDos[i].item;
-    //     var isCompleted = toDos[i].isCompleted;
-
-    //     // console.log(item);
-
-    //             toDoContents.innerHTML += `<div class="well">
-    //                                 <span>${item}</span>
-    //                                 <input type="checkbox" class="pull-right" id="completed">
-    //                              </div>`
-
-    // }
 }
